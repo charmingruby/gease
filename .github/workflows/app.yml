@@ -1,0 +1,27 @@
+name: App
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '>=${{vars.GO_VERSION}}'
+    
+    - name: Install Go Dependencies
+      run: go mod tidy
+
+    - name: Build
+      run: go build -v ./...
+    
+    - name: Test
+      run: go test ./...
