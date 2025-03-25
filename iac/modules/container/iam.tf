@@ -38,31 +38,36 @@ resource "aws_iam_role" "ecr_role" {
     ]
   })
 
-  inline_policy {
-    name = "ecr-app-permission"
-    policy = jsonencode({
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Sid" : "AllowPushPull",
-          "Effect" : "Allow",
-          "Action" : [
-            "ecr:GetAuthorizationToken",
-            "ecr:BatchCheckLayerAvailability",
-            "ecr:GetDownloadUrlForLayer",
-            "ecr:UploadLayerPart",
-            "ecr:InitiateLayerUpload",
-            "ecr:CompleteLayerUpload",
-            "ecr:PutImage",
-            "ecr:BatchGetImage"
-          ],
-          "Resource" : "*"
-        }
-      ]
-    })
-  }
-
   tags = merge(var.tags, {
     "Name" = format("%s_ecr_role", var.tags["project"])
   })
+}
+
+resource "aws_iam_policy" "ecr_role_permission" {
+  name = "ecr-app-permission"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "AllowPushPull",
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:UploadLayerPart",
+          "ecr:InitiateLayerUpload",
+          "ecr:CompleteLayerUpload",
+          "ecr:PutImage",
+          "ecr:BatchGetImage"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_role_permission_attachment" {
+  role       = aws_iam_role.ecr_role.name
+  policy_arn = aws_iam_policy.ecr_role_permission.arn
 }

@@ -21,37 +21,42 @@ resource "aws_iam_role" "this" {
     ]
   })
 
-  inline_policy {
-    name = "pipeline-app-permission"
-    policy = jsonencode({
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Sid" : "ECR",
-          "Action" : "ecr:*",
-          "Effect" : "Allow",
-          "Resource" : "*"
-        },
-        {
-          "Sid" : "IAM",
-          "Action" : "iam:*",
-          "Effect" : "Allow",
-          "Resource" : "*"
-        },
-        {
-          "Sid" : "S3",
-          "Action" : "s3:*",
-          "Effect" : "Allow",
-          "Resource" : "*"
-        }
-      ]
-    })
-  }
-
   tags = merge(
     var.tags,
     {
       Name = format("%s_pipeline_role", var.tags["project"])
     }
   )
+}
+
+resource "aws_iam_policy" "pipeline_app_permission" {
+  name = "pipeline-app-permission"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "ECR",
+        "Action" : "ecr:*",
+        "Effect" : "Allow",
+        "Resource" : "*"
+      },
+      {
+        "Sid" : "IAM",
+        "Action" : "iam:*",
+        "Effect" : "Allow",
+        "Resource" : "*"
+      },
+      {
+        "Sid" : "S3",
+        "Action" : "s3:*",
+        "Effect" : "Allow",
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "pipeline_app_permission_attachment" {
+  role       = aws_iam_role.this.name
+  policy_arn = aws_iam_policy.pipeline_app_permission.arn
 }
