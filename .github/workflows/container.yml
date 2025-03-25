@@ -42,7 +42,6 @@ jobs:
           --build-arg APPLICATION_ID=${{ vars.APPLICATION_ID }} \
           -t $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG .
 
-          
           docker tag $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG $REGISTRY/${{secrets.ECR_REPOSITORY}}:latest
           
           docker push --all-tags $REGISTRY/${{secrets.ECR_REPOSITORY}}

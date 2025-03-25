@@ -1,6 +1,5 @@
 # STEP 1: Build
 FROM golang:1.23.3-alpine AS builder
-ARG VERSION
 RUN apk update && apk add --no-cache git upx
 WORKDIR /build
 COPY . .
@@ -12,7 +11,10 @@ RUN upx --best --lzma ./bin/gease
 
 # STEP 3: Run
 FROM alpine:latest
-ARG VERSION
+
+ARG APPLICATION_ID
+ENV APPLICATION_ID=${APPLICATION_ID}
+
 WORKDIR /app
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
 COPY --from=builder /build/bin/gease ./gease
