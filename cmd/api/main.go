@@ -12,7 +12,6 @@ import (
 	"gitub.com/charmingruby/gease/config"
 	"gitub.com/charmingruby/gease/internal/health"
 	"gitub.com/charmingruby/gease/internal/shared/server"
-	"gitub.com/charmingruby/gease/internal/signature"
 	"gitub.com/charmingruby/gease/pkg/logger"
 )
 
@@ -27,8 +26,7 @@ func main() {
 
 	r := gin.Default()
 
-	health.NewHTTPHandler(r)
-	signature.NewHTTPHandler(r)
+	health.NewHTTPHandler(r, cfg.ApplicationID)
 
 	srv := server.New(r, cfg.ServerPort)
 

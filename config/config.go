@@ -7,7 +7,8 @@ import (
 )
 
 type environment struct {
-	ServerPort string `env:"SERVER_PORT" envDefault:"3000"`
+	ServerPort    string `env:"SERVER_PORT" envDefault:"3000"`
+	ApplicationID string `env:"APPLICATION_ID"`
 }
 
 func New() (Config, error) {
@@ -24,5 +25,6 @@ func New() (Config, error) {
 }
 
 type Config struct {
-	ServerPort string
+	ServerPort    string
+	ApplicationID string
 }
