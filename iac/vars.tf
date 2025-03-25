@@ -39,3 +39,8 @@ variable "oidc_thumbprint" {
   description = "The OIDC thumbprint"
   type        = string
 }
+
+variable "aws_region" {
+  description = "The AWS region to deploy to"
+  type        = string
+}
