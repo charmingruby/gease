@@ -38,6 +38,6 @@ jobs:
           REGISTRY: ${{steps.login-ecr.outputs.registry}}
           TAG: ${{ steps.generate_tag.outputs.sha }}
         run: |
-          docker build -t $REGISTRY/hextech:$TAG .
-          docker tag $REGISTRY/hextech:$TAG $REGISTRY/hextech:latest
-          docker push --all-tags $REGISTRY/hextech
+          docker build -t $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG .
+          docker tag $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG $REGISTRY/${{secrets.ECR_REPOSITORY}}:latest
+          docker push --all-tags $REGISTRY/${{secrets.ECR_REPOSITORY}}
