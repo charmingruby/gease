@@ -27,6 +27,10 @@ resource "aws_s3_bucket" "terraform-state" {
 resource "aws_s3_bucket_versioning" "terraform-state" {
   bucket = "gease-iac"
 
+  lifecycle {
+    prevent_destroy = true
+  }
+
   versioning_configuration {
     status = "Enabled"
   }

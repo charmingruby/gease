@@ -24,3 +24,18 @@ variable "created_at" {
   description = "The project name"
   type        = string
 }
+
+variable "github_repository" {
+  description = "The GitHub repository to use"
+  type        = string
+}
+
+variable "github_repository_owner" {
+  description = "The GitHub repository owner"
+  type        = string
+}
+
+variable "oidc_thumbprint" {
+  description = "The OIDC thumbprint"
+  type        = string
+}
