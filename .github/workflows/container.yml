@@ -33,11 +33,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build 
+      - name: Build and Push to ECR
         env:
           REGISTRY: ${{steps.login-ecr.outputs.registry}}
           TAG: ${{ steps.generate_tag.outputs.sha }}
         run: |
-          docker build -t $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG .
+          docker build \
+          --build-arg APPLICATION_ID=${{ vars.APPLICATION_ID }} \
+          -t $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG .
+
+          
           docker tag $REGISTRY/${{secrets.ECR_REPOSITORY}}:$TAG $REGISTRY/${{secrets.ECR_REPOSITORY}}:latest
+          
           docker push --all-tags $REGISTRY/${{secrets.ECR_REPOSITORY}}
