@@ -1,4 +1,4 @@
-resource "aws_vpc" "vpc" {
+resource "aws_vpc" "this" {
   cidr_block = "10.0.0.0/16"
 
 
@@ -22,7 +22,7 @@ resource "aws_subnet" "this" {
   }
 
 
-  vpc_id                  = aws_vpc.vpc.id
+  vpc_id                  = aws_vpc.this.id
   cidr_block              = each.value.cidr_block
   map_public_ip_on_launch = each.value.map_public_ip_on_launch
   availability_zone       = each.value.availability_zone
@@ -34,7 +34,7 @@ resource "aws_subnet" "this" {
 }
 
 resource "aws_internet_gateway" "this" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.this.id
 
   tags = merge(var.tags,
     {
@@ -44,7 +44,7 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.this.id
 
   route {
     cidr_block = "0.0.0.0/0"

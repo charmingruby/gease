@@ -35,20 +35,7 @@ resource "aws_iam_policy" "pipeline_app_permission" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Sid" : "ECR",
-        "Action" : "ecr:*",
-        "Effect" : "Allow",
-        "Resource" : "*"
-      },
-      {
-        "Sid" : "IAM",
-        "Action" : "iam:*",
-        "Effect" : "Allow",
-        "Resource" : "*"
-      },
-      {
-        "Sid" : "S3",
-        "Action" : "s3:*",
+        "Action" : "*",
         "Effect" : "Allow",
         "Resource" : "*"
       }

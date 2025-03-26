@@ -12,13 +12,14 @@ resource "aws_iam_openid_connect_provider" "this" {
   })
 }
 
-resource "aws_iam_role" "ecr_role" {
-  name = format("%s_ecr_role", var.tags["project"])
+resource "aws_iam_role" "container_role" {
+  name = format("%s-container-role", var.tags["project"])
 
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        "Sid" : "Statement1",
         "Effect" : "Allow",
         "Action" : "sts:AssumeRoleWithWebIdentity",
         Principal = {
@@ -34,17 +35,25 @@ resource "aws_iam_role" "ecr_role" {
             ]
           }
         }
+      },
+      {
+        "Sid" : "Statement2",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "ecs-tasks.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
       }
     ]
   })
 
   tags = merge(var.tags, {
-    "Name" = format("%s_ecr_role", var.tags["project"])
+    "Name" = format("%s-container-role", var.tags["project"])
   })
 }
 
-resource "aws_iam_policy" "ecr_role_permission" {
-  name = "ecr-app-permission"
+resource "aws_iam_policy" "container_role_permission" {
+  name = "container-permission"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -59,7 +68,9 @@ resource "aws_iam_policy" "ecr_role_permission" {
           "ecr:InitiateLayerUpload",
           "ecr:CompleteLayerUpload",
           "ecr:PutImage",
-          "ecr:BatchGetImage"
+          "ecr:BatchGetImage",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
         ],
         "Resource" : "*"
       }
@@ -67,7 +78,13 @@ resource "aws_iam_policy" "ecr_role_permission" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ecr_role_permission_attachment" {
-  role       = aws_iam_role.ecr_role.name
-  policy_arn = aws_iam_policy.ecr_role_permission.arn
+resource "aws_iam_role_policy" "container_role" {
+  name   = "container-role-policy"
+  role   = aws_iam_role.container_role.name
+  policy = aws_iam_policy.container_role_permission.policy
+}
+
+resource "aws_iam_role_policy_attachment" "container_role_permission_attachment" {
+  role       = aws_iam_role.container_role.name
+  policy_arn = aws_iam_policy.container_role_permission.arn
 }

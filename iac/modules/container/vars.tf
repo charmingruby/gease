@@ -17,3 +17,13 @@ variable "oidc_thumbprint" {
   description = "The OIDC thumbprint"
   type        = string
 }
+
+variable "subnet_ids" {
+  description = "The subnet IDs"
+  type        = list(string)
+}
+
+variable "vpc_id" {
+  description = "The VPC ID"
+  type        = string
+}
